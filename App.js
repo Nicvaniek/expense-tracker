@@ -4,34 +4,41 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { Colors } from "./constants";
-import { AllExpensesScreen, RecentExpensesScreen } from "./screens";
+import { AllExpensesScreen, RecentExpensesScreen, TabsScreen } from "./screens";
 import { useState } from "react";
 import { ExpensesContext } from "./contexts";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { ManageExpenseScreen } from "./screens/ManageExpense.screen";
 
-const Tab = createBottomTabNavigator();
-
-const getTabIcon =
-  (route) =>
-    ({ focused, color, size }) => {
-      let iconName;
-      if (route.name === "Recent") {
-        iconName = focused ? "hourglass" : "hourglass-outline";
-      } else if (route.name === "All") {
-        iconName = focused ? "list" : "list-outline";
-      }
-      return <Ionicons name={iconName} size={size} color={color} />;
-    };
+const Stack = createNativeStackNavigator();
 
 export default function App() {
 
   const [expenses, setExpenses] = useState([{
+    id: Math.random(),
     title: "Test expense A",
     date: new Date(),
     amount: 300
-  }, { title: "Test expense B", date: new Date(), amount: 59 }, {
+  }, { id: Math.random(), title: "Test expense B", date: new Date(), amount: 59 }, {
+    id: Math.random(),
     title: "Test expense C",
     date: new Date(),
     amount: 150
+  }, {
+    id: Math.random(),
+    title: "Test expense D",
+    date: new Date(),
+    amount: 32
+  }, {
+    id: Math.random(),
+    title: "Test expense E",
+    date: new Date(),
+    amount: 11
+  }, {
+    id: Math.random(),
+    title: "Test expense F",
+    date: new Date(),
+    amount: 965
   }]);
 
   return (
@@ -39,47 +46,15 @@ export default function App() {
       <StatusBar style="light" />
       <ExpensesContext.Provider value={{ expenses, setExpenses }}>
         <NavigationContainer>
-          <Tab.Navigator
-            initialRouteName="All" // temp
-            screenOptions={({ route }) => ({
-              tabBarIcon: getTabIcon(route),
-              tabBarActiveTintColor: Colors.PRIMARY,
-              tabBarInactiveTintColor: "gray",
-              headerStyle: {
-                backgroundColor: Colors.PRIMARY
-              },
-              headerTintColor: "white",
-              headerRight: () => (
-                <Pressable style={styles.addExpenseButton}>
-                  <Ionicons color="white" name="add" size={32} />
-                </Pressable>
-              )
-            })}
-          >
-            <Tab.Screen
-              name="Recent"
-              component={RecentExpensesScreen}
-              options={{
-                title: "Recent Expenses"
-              }}
-            />
-            <Tab.Screen
-              name="All"
-              component={AllExpensesScreen}
-              options={{
-                title: "All Expenses"
-              }}
-            />
-          </Tab.Navigator
-          >
+          <Stack.Navigator
+            screenOptions={{ headerStyle: { backgroundColor: Colors.PRIMARY }, headerTintColor: "white" }}>
+            <Stack.Screen name="Tabs" component={TabsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="ManagementModal" component={ManageExpenseScreen} options={{ presentation: "modal" }} />
+          </Stack.Navigator>
         </NavigationContainer>
       </ExpensesContext.Provider>
     </>
   );
 }
 
-const styles = StyleSheet.create({
-  addExpenseButton: {
-    marginRight: 18
-  }
-});
+const styles = StyleSheet.create({});

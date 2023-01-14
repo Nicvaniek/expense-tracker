@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 
   labelText: {
-    color: "gray",
+    color: Colors.SECONDARY,
     fontSize: 28
   },
   totalText: {
